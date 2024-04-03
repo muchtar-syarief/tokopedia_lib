@@ -26,6 +26,7 @@ type Scenario struct {
 func NewScenario(t *testing.T) *Scenario {
 	scen := Scenario{
 		Base: GetBaseTestAsset(""),
+		t:    t,
 	}
 
 	return &scen
@@ -106,7 +107,7 @@ func (scen *Scenario) createConfigFile(data any, fname string) func() {
 func (scen *Scenario) WithUploadConfig(cfgmodifier func(cfg *config.UploadBaseConfig) error, handler func(cfg *config.UploadBaseConfig)) {
 	cfg := config.UploadBaseConfig{
 		Database: config.DatabaseConfig{
-			DbURI:  "mongodb://root:password@localhost",
+			DbURI:  "mongodb://localhost:27017",
 			DbName: "kampretcode2",
 		},
 	}
