@@ -2,7 +2,6 @@ package toko_libur
 
 import (
 	"encoding/json"
-	"log"
 	"os"
 
 	"github.com/pdcgo/common_conf/pdc_application"
@@ -32,7 +31,6 @@ func (c *TokopediaTokoLiburConfig) CreateCloseShopInput() *api.CloseShopSchedule
 		input.CloseStart = c.CloseStart
 		input.CloseEnd = c.CloseEnd
 	}
-	log.Println(input)
 
 	return &input
 }
