@@ -30,6 +30,15 @@ export interface GrabTokopediaResponse {
 	empty_csv: boolean
 }
 
+export interface GrabJakmallQueryCli {
+	base: string
+}
+
+export interface GrabJakmallResponse {
+	use_csv: boolean
+	empty_csv: boolean
+}
+
 export interface DataSpinQuery {
 	name: string
 }
@@ -53,6 +62,7 @@ export interface SettingSpinData {
 	smin: number
 	smax: number
 	merek_ins_t: boolean
+	ignore_first_word: boolean
 	title: string
 	desc: string
 }
@@ -98,7 +108,7 @@ export interface ProductPriceRangeAggQuery {
 	pmax: number
 	pmin: number
 	use_empty_city: boolean
-	range_price: number
+	rprice: number
 }
 
 export interface ProductPriceRangeAgg {
@@ -146,7 +156,7 @@ export interface MarkupData {
 	mark: string
 	type: string
 	range: any
-	up: null
+	up: Array<number>
 }
 
 export interface Markup {
@@ -244,6 +254,16 @@ export interface CategoryItem {
 export interface ManifestResponse {
 	category: Array<ShopeeCategory>
 	public_category_repo: Array<CategoryItem>
+}
+
+export interface CrawlerConfig {
+	username: string
+	password: string
+	email: string
+	email_password: string
+	login_timeout: number
+	email_validate_timeout: number
+	login_reply_attempt: number
 }
 
 export interface PredictWeightPayload {
@@ -352,13 +372,6 @@ export interface SettingGrabFilterShopeeExtraResponse {
 	shippings: Array<GrabShopeeShipping>
 }
 
-export interface CrawlerConfig {
-	username: string
-	password: string
-	email: string
-	email_password: string
-}
-
 export interface GrabTokopediaQuery {
 	pmin: number
 	pmax: number
@@ -438,6 +451,10 @@ export interface SettingDefaultResponse {
 export interface SettingFilterWordQuery {
 	name: string
 	makedefault: boolean
+}
+
+export interface ReportQuery {
+	output: string
 }
 
 export interface Akun {
@@ -609,6 +626,7 @@ export interface GrabTasker {
 	use_filter: boolean
 	keyword: string
 	shopee_categ: ShopeeCateg
+	jakmall_categs: Array<string>
 }
 
 export interface DumpCategoryQuery {
@@ -621,6 +639,10 @@ export interface CategoryTokopediaMapQuery {
 
 export interface CategoryTokopediaMapItem {
 	shopee_categ: Array<string>
+}
+
+export interface HastagQuery {
+	name: string
 }
 
 export interface HastagDataResponse {
@@ -639,7 +661,12 @@ export interface HastagDeleteQuery {
 
 export interface HastagLimitResponse {
 	name: string
-	data: null
+	data: Array<number>
+}
+
+export interface HastagLimitData {
+	min: number
+	max: number
 }
 
 export interface ExampleSpinProductsQuery {
@@ -697,6 +724,13 @@ export interface UpdaterAttributeCli {
 	base: string
 }
 
+export interface TokoLiburQueryCli {
+	base: string
+	libur: boolean
+	report: string
+	akun: string
+}
+
 export interface ExportSupplierQuery {
 	namespace: string
 }
@@ -752,6 +786,11 @@ export interface AttributeTree {
 export interface AttributeResponse {
 	exist: boolean
 	attributes: Array<AttributeTree | undefined>
+}
+
+export interface QlobotShopeeImportCSVQuery {
+	namespace: string
+	per_item: number
 }
 
 export interface BulkItem {
@@ -850,8 +889,43 @@ export interface UpdateTopedCategoryPayload {
 	secret: string
 }
 
+export interface AkunDeleteItem {
+	username: string
+	password: string
+	secret: string
+}
+
+export interface SoldConfig {
+	min: number
+	max: number
+}
+
+export interface ViewConfig {
+	min: number
+	max: number
+}
+
+export interface PriceConfig {
+	min: number
+	max: number
+}
+
+export interface TokopediaDeleteConfig {
+	limit_concurent: number
+	limit_product: number
+	title: Array<string>
+	product_status: string
+	category_id: string
+	start_time: number
+	end_time: number
+	akuns: Array<AkunDeleteItem | undefined>
+	sold_filter: SoldConfig | undefined
+	view_filter: ViewConfig | undefined
+	price_filter: PriceConfig | undefined
+}
+
 export interface DeleteSettingRes {
-	data: DeleteConfig | undefined
+	data: TokopediaDeleteConfig | undefined
 }
 
 export interface DumpCategoryResponse {
@@ -984,6 +1058,120 @@ export interface CheckOrderAkunItem {
 	username: string
 }
 
+export interface TokopediaTokoLiburQueryCli {
+	base: string
+}
+
+export interface AkunTokoLibur {
+	username: string
+	password: string
+	secret: string
+}
+
+export interface TokopediaTokoLiburConfig {
+	libur: boolean
+	report: string
+	limit: number
+	closeStart: number
+	closeEnd: number
+}
+
+export interface TokopediaTokoLiburPayload {
+	akuns: Array<AkunTokoLibur | undefined>
+	config: TokopediaTokoLiburConfig | undefined
+}
+
+export interface CategoryNavigation {
+	name: string
+	url: string
+	icon: string
+	color: string
+	children: Array<CategoryNavigation | undefined>
+}
+
+export interface JkmlCategoryListResponse {
+	msg: string
+	error: string
+	data: Array<CategoryNavigation | undefined>
+}
+
+export interface JkmlWebResponse {
+	msg: string
+	error: string
+}
+
+export interface SearchCityOption {
+	label: string
+	value: string
+}
+
+export interface SearchSortOption {
+	label: string
+	value: string
+}
+
+export interface JkmlSearchDataResponse {
+	msg: string
+	error: string
+	cities: Array<SearchCityOption | undefined>
+	delivery_types: Array<string>
+	sorts: Array<SearchSortOption | undefined>
+}
+
+export interface GrabSearchFilter {
+	category: string
+	price_min: number
+	price_max: number
+	untung_paling_besar: number
+	in_stock: number
+	bulk_price: number
+	delivery_types: Array<string>
+	cities: Array<string>
+	sort: string
+	rating: number
+}
+
+export interface JkmlSearchFilterResponse {
+	msg: string
+	error: string
+	data: GrabSearchFilter | undefined
+}
+
+export interface JkmlCategoryMapListQuery {
+	type: string
+	namespace: string
+}
+
+export interface MapCateg {
+	id: number
+	name: string
+}
+
+export interface JkmlCategoryMap {
+	type: string
+	name: string
+	categs: Array<MapCateg | undefined>
+	mapper_id: number
+	mapper_name: string
+	mapper_categs: Array<MapCateg | undefined>
+	count: number
+}
+
+export interface JkmlCategoryMapListResponse {
+	msg: string
+	error: string
+	data: Array<JkmlCategoryMap | undefined>
+}
+
+export interface CategoryMapper {
+	type: string
+	name: string
+	categs: Array<MapCateg | undefined>
+	mapper_id: number
+	mapper_name: string
+	mapper_categs: Array<MapCateg | undefined>
+}
+
 export interface ManualShopeeUploadQueryCli {
 	base: string
 	reset: boolean
@@ -1001,6 +1189,25 @@ export interface ManualTokopediaUploadQueryCli {
 
 export interface ShopeeUploadQueryCli {
 	base: string
+}
+
+export interface TopedShopeeUploadQueryCli {
+	base: string
+	use_mapper: boolean
+}
+
+export interface QlobotShopeeUploadQueryCli {
+	base: string
+}
+
+export interface JakmallShopeeUploadQueryCli {
+	base: string
+	use_mapper: boolean
+}
+
+export interface JakmallTokopediaUploadQueryCli {
+	base: string
+	use_mapper: boolean
 }
 
 export interface ShopeeTopedUploadQueryCli {
@@ -1025,6 +1232,34 @@ export interface BaseWebResponse {
 
 export interface TokopediaToShopeeAutoSuggestQuery {
 	namespace: string
+}
+
+export interface TempAkunRes {
+	data: string
+	message: string
+	error: number
+}
+
+export interface InfoRes {
+	lisensi: string
+	version: string
+}
+
+export interface CacheSizeQuery {
+	reset: boolean
+}
+
+export interface SizeSum {
+	size: number
+	size_kb: number
+	size_mb: number
+	size_gb: number
+}
+
+export interface CacheSizeRes {
+	processing: boolean
+	cache_size: SizeSum | undefined
+	webdriver_size: SizeSum | undefined
 }
 
 export interface SourceAttributeQuery {
@@ -1376,8 +1611,29 @@ export const clients = {
 			empty_csv: false
 		}
 	},
+	GetLauncherV1RunGrabJakmall: {
+		url: "launcher/v1/run_grab_jakmall" as const,
+		method: "GET" as const,
+		query: {
+				base: ``
+			} as GrabJakmallQueryCli ,
+		body: {},
+		response: {
+			use_csv: false,
+			empty_csv: false
+		}
+	},
 	GetLegacyApiDataspin: {
 		url: "legacy/api/dataspin" as const,
+		method: "GET" as const,
+		query: undefined,
+		body: {},
+		response: [
+			``
+		] as Array<string>
+	},
+	GetLegacyApiDataspinGet: {
+		url: "legacy/api/dataspin/get" as const,
 		method: "GET" as const,
 		query: {
 			name: ``
@@ -1431,6 +1687,7 @@ export const clients = {
 				smin: 0,
 				smax: 0,
 				merek_ins_t: false,
+				ignore_first_word: false,
 				title: ``,
 				desc: ``
 			} as SettingSpinData | undefined,
@@ -1451,6 +1708,7 @@ export const clients = {
 			smin: 0,
 			smax: 0,
 			merek_ins_t: false,
+			ignore_first_word: false,
 			title: ``,
 			desc: ``
 		},
@@ -1512,7 +1770,7 @@ export const clients = {
 			pmax: 0,
 			pmin: 0,
 			use_empty_city: false,
-			range_price: 0
+			rprice: 0
 		},
 		body: {},
 		response: [
@@ -1688,7 +1946,9 @@ export const clients = {
 				mark: ``,
 				type: ``,
 				range: {},
-				up: null
+				up: [
+				0
+				] as Array<number>
 			}
 			] as Array<MarkupData>,
 			fix_mark: 0,
@@ -1713,7 +1973,9 @@ export const clients = {
 				mark: ``,
 				type: ``,
 				range: {},
-				up: null
+				up: [
+				0
+				] as Array<number>
 			}
 			] as Array<MarkupData>,
 			fix_mark: 0,
@@ -1733,7 +1995,9 @@ export const clients = {
 				mark: ``,
 				type: ``,
 				range: {},
-				up: null
+				up: [
+				0
+				] as Array<number>
 			}
 			] as Array<MarkupData>,
 			fix_mark: 0,
@@ -1857,6 +2121,40 @@ export const clients = {
 				] as Array<CategorySub>
 			}
 			] as Array<CategoryItem>
+		}
+	},
+	GetLegacyShopeeCrawlerSetting: {
+		url: "legacy/shopee/crawler_setting" as const,
+		method: "GET" as const,
+		query: undefined,
+		body: {},
+		response: {
+			username: ``,
+			password: ``,
+			email: ``,
+			email_password: ``,
+			login_timeout: 0,
+			email_validate_timeout: 0,
+			login_reply_attempt: 0
+		}
+	},
+	PutLegacyShopeeCrawlerSetting: {
+		url: "legacy/shopee/crawler_setting" as const,
+		method: "PUT" as const,
+		query: undefined,
+		body: {
+			username: ``,
+			password: ``,
+			email: ``,
+			email_password: ``,
+			login_timeout: 0,
+			email_validate_timeout: 0,
+			login_reply_attempt: 0
+		},
+		response: {
+			errcode: 0,
+			message: ``,
+			status: ``
 		}
 	},
 	PostLegacyV4ShopeeWeightPredict: {
@@ -2248,7 +2546,10 @@ export const clients = {
 			username: ``,
 			password: ``,
 			email: ``,
-			email_password: ``
+			email_password: ``,
+			login_timeout: 0,
+			email_validate_timeout: 0,
+			login_reply_attempt: 0
 		}
 	},
 	PutLegacyShopeeConfigCrawler: {
@@ -2259,13 +2560,19 @@ export const clients = {
 			username: ``,
 			password: ``,
 			email: ``,
-			email_password: ``
+			email_password: ``,
+			login_timeout: 0,
+			email_validate_timeout: 0,
+			login_reply_attempt: 0
 		},
 		response: {
 			username: ``,
 			password: ``,
 			email: ``,
-			email_password: ``
+			email_password: ``,
+			login_timeout: 0,
+			email_validate_timeout: 0,
+			login_reply_attempt: 0
 		}
 	},
 	GetLegacyApiSettingGrab: {
@@ -2578,7 +2885,9 @@ export const clients = {
 	GetLegacyApiBackupAkun: {
 		url: "legacy/api/backupAkun" as const,
 		method: "GET" as const,
-		query: undefined,
+		query: {
+			output: ``
+		},
 		body: {},
 		response: {
 			errcode: 0,
@@ -2961,7 +3270,10 @@ export const clients = {
 				parent_display_name: ``,
 				display_name: ``,
 				is_collection: 0
-			}
+			},
+				jakmall_categs: [
+				``
+				] as Array<string>
 			}
 		] as Array<GrabTasker>
 	},
@@ -2988,7 +3300,10 @@ export const clients = {
 				parent_display_name: ``,
 				display_name: ``,
 				is_collection: 0
-			}
+			},
+				jakmall_categs: [
+				``
+				] as Array<string>
 			}
 		] as Array<GrabTasker>,
 		response: {
@@ -3051,7 +3366,9 @@ export const clients = {
 	GetLegacyApiHastag: {
 		url: "legacy/api/hastag" as const,
 		method: "GET" as const,
-		query: undefined,
+		query: {
+			name: ``
+		},
 		body: {},
 		response: {
 			name: ``,
@@ -3059,6 +3376,15 @@ export const clients = {
 			``
 			] as Array<string>
 		}
+	},
+	GetLegacyApiHastagList: {
+		url: "legacy/api/hastag/list" as const,
+		method: "GET" as const,
+		query: undefined,
+		body: {},
+		response: [
+			``
+		] as Array<string>
 	},
 	PostLegacyApiHastag: {
 		url: "legacy/api/hastag" as const,
@@ -3096,7 +3422,23 @@ export const clients = {
 		body: {},
 		response: {
 			name: ``,
-			data: null
+			data: [
+			0
+			] as Array<number>
+		}
+	},
+	PostLegacyApiConfigHastagLimit: {
+		url: "legacy/api/config/hastagLimit" as const,
+		method: "POST" as const,
+		query: undefined,
+		body: {
+			min: 0,
+			max: 0
+		},
+		response: {
+			errcode: 0,
+			message: ``,
+			status: ``
 		}
 	},
 	GetLegacyV1ExamplespinProducts: {
@@ -3177,6 +3519,18 @@ export const clients = {
 		query: {
 				base: ``
 			} as UpdaterAttributeCli ,
+		body: {},
+		response: {} as any
+	},
+	GetShopeeV5RunTokoLibur: {
+		url: "shopee/v5/run_toko_libur" as const,
+		method: "GET" as const,
+		query: {
+				base: ``,
+				libur: false,
+				report: ``,
+				akun: ``
+			} as TokoLiburQueryCli ,
 		body: {},
 		response: {} as any
 	},
@@ -3286,6 +3640,20 @@ export const clients = {
 					} as AttributeTree | undefined
 				] as Array<AttributeTree | undefined>
 			} as AttributeResponse 
+	},
+	PostShopeeV5QlobotShopeeImportCsv: {
+		url: "shopee/v5/qlobot/shopee_import_csv" as const,
+		method: "POST" as const,
+		query: {
+			namespace: ``,
+			per_item: 0
+		},
+		body: {},
+		response: {
+			errcode: 0,
+			message: ``,
+			status: ``
+		}
 	},
 	GetTokopediaAkunList: {
 		url: "tokopedia/akun/list" as const,
@@ -3536,16 +3904,35 @@ export const clients = {
 		body: {},
 		response: {
 			data: {
-				akun: ``,
-				awaltanggal: `2021-12-01T07:00:00+07:00`,
-				blokir: false,
-				delete: 0,
-				diarsipkan: false,
-				diperiksa: false,
-				sold: 0,
-				tanggal: `2021-12-01T07:00:00+07:00`,
-				view: 0
-			} as DeleteConfig | undefined
+				limit_concurent: 0,
+				limit_product: 0,
+				title: [
+				``
+				] as Array<string>,
+				product_status: ``,
+				category_id: ``,
+				start_time: 0,
+				end_time: 0,
+				akuns: [
+				{
+						username: ``,
+						password: ``,
+						secret: ``
+					} as AkunDeleteItem | undefined
+				] as Array<AkunDeleteItem | undefined>,
+				sold_filter: {
+					min: 0,
+					max: 0
+				} as SoldConfig | undefined,
+				view_filter: {
+					min: 0,
+					max: 0
+				} as ViewConfig | undefined,
+				price_filter: {
+					min: 0,
+					max: 0
+				} as PriceConfig | undefined
+			} as TokopediaDeleteConfig | undefined
 		}
 	},
 	PutTokopediaDeleterSetting: {
@@ -3553,28 +3940,66 @@ export const clients = {
 		method: "PUT" as const,
 		query: undefined,
 		body: {
-			akun: ``,
-			awaltanggal: `2021-12-01T07:00:00+07:00`,
-			blokir: false,
-			delete: 0,
-			diarsipkan: false,
-			diperiksa: false,
-			sold: 0,
-			tanggal: `2021-12-01T07:00:00+07:00`,
-			view: 0
+			limit_concurent: 0,
+			limit_product: 0,
+			title: [
+			``
+			] as Array<string>,
+			product_status: ``,
+			category_id: ``,
+			start_time: 0,
+			end_time: 0,
+			akuns: [
+			{
+					username: ``,
+					password: ``,
+					secret: ``
+				} as AkunDeleteItem | undefined
+			] as Array<AkunDeleteItem | undefined>,
+			sold_filter: {
+				min: 0,
+				max: 0
+			} as SoldConfig | undefined,
+			view_filter: {
+				min: 0,
+				max: 0
+			} as ViewConfig | undefined,
+			price_filter: {
+				min: 0,
+				max: 0
+			} as PriceConfig | undefined
 		},
 		response: {
 			data: {
-				akun: ``,
-				awaltanggal: `2021-12-01T07:00:00+07:00`,
-				blokir: false,
-				delete: 0,
-				diarsipkan: false,
-				diperiksa: false,
-				sold: 0,
-				tanggal: `2021-12-01T07:00:00+07:00`,
-				view: 0
-			} as DeleteConfig | undefined
+				limit_concurent: 0,
+				limit_product: 0,
+				title: [
+				``
+				] as Array<string>,
+				product_status: ``,
+				category_id: ``,
+				start_time: 0,
+				end_time: 0,
+				akuns: [
+				{
+						username: ``,
+						password: ``,
+						secret: ``
+					} as AkunDeleteItem | undefined
+				] as Array<AkunDeleteItem | undefined>,
+				sold_filter: {
+					min: 0,
+					max: 0
+				} as SoldConfig | undefined,
+				view_filter: {
+					min: 0,
+					max: 0
+				} as ViewConfig | undefined,
+				price_filter: {
+					min: 0,
+					max: 0
+				} as PriceConfig | undefined
+			} as TokopediaDeleteConfig | undefined
 		}
 	},
 	GetTokopediaDumpCategoryDump: {
@@ -3831,6 +4256,212 @@ export const clients = {
 		] as Array<CheckOrderAkunItem | undefined>,
 		response: {} as any
 	},
+	PostTokopediaTokoLiburRunTokoLibur: {
+		url: "tokopedia/toko_libur/run_toko_libur" as const,
+		method: "POST" as const,
+		query: {
+				base: ``
+			} as TokopediaTokoLiburQueryCli ,
+		body: {
+			akuns: [
+			{
+					username: ``,
+					password: ``,
+					secret: ``
+				} as AkunTokoLibur | undefined
+			] as Array<AkunTokoLibur | undefined>,
+			config: {
+				libur: false,
+				report: ``,
+				limit: 0,
+				closeStart: 0,
+				closeEnd: 0
+			} as TokopediaTokoLiburConfig | undefined
+		},
+		response: {} as any
+	},
+	GetJakmallCategoryList: {
+		url: "jakmall/category/list" as const,
+		method: "GET" as const,
+		query: undefined,
+		body: {},
+		response: {
+			msg: ``,
+			error: ``,
+			data: [
+			{
+					name: ``,
+					url: ``,
+					icon: ``,
+					color: ``,
+					children: [
+					] as Array<CategoryNavigation | undefined>
+				} as CategoryNavigation | undefined
+			] as Array<CategoryNavigation | undefined>
+		}
+	},
+	GetJakmallCategoryDumpCsv: {
+		url: "jakmall/category/dump_csv" as const,
+		method: "GET" as const,
+		query: undefined,
+		body: {},
+		response: {
+			msg: ``,
+			error: ``
+		}
+	},
+	GetJakmallSearchFilterData: {
+		url: "jakmall/search_filter/data" as const,
+		method: "GET" as const,
+		query: undefined,
+		body: {},
+		response: {
+			msg: ``,
+			error: ``,
+			cities: [
+			{
+					label: ``,
+					value: ``
+				} as SearchCityOption | undefined
+			] as Array<SearchCityOption | undefined>,
+			delivery_types: [
+			``
+			] as Array<string>,
+			sorts: [
+			{
+					label: ``,
+					value: ``
+				} as SearchSortOption | undefined
+			] as Array<SearchSortOption | undefined>
+		}
+	},
+	GetJakmallSearchFilter: {
+		url: "jakmall/search_filter" as const,
+		method: "GET" as const,
+		query: undefined,
+		body: {},
+		response: {
+			msg: ``,
+			error: ``,
+			data: {
+				category: ``,
+				price_min: 0,
+				price_max: 0,
+				untung_paling_besar: 0,
+				in_stock: 0,
+				bulk_price: 0,
+				delivery_types: [
+				``
+				] as Array<string>,
+				cities: [
+				``
+				] as Array<string>,
+				sort: ``,
+				rating: 0.00
+			} as GrabSearchFilter | undefined
+		}
+	},
+	PostJakmallSearchFilter: {
+		url: "jakmall/search_filter" as const,
+		method: "POST" as const,
+		query: undefined,
+		body: {
+			category: ``,
+			price_min: 0,
+			price_max: 0,
+			untung_paling_besar: 0,
+			in_stock: 0,
+			bulk_price: 0,
+			delivery_types: [
+			``
+			] as Array<string>,
+			cities: [
+			``
+			] as Array<string>,
+			sort: ``,
+			rating: 0.00
+		},
+		response: {
+			msg: ``,
+			error: ``
+		}
+	},
+	GetJakmallCategoryMapperList: {
+		url: "jakmall/category_mapper/list" as const,
+		method: "GET" as const,
+		query: {
+			type: ``,
+			namespace: ``
+		},
+		body: {},
+		response: {
+			msg: ``,
+			error: ``,
+			data: [
+			{
+					type: ``,
+					name: ``,
+					categs: [
+					{
+							id: 0,
+							name: ``
+						} as MapCateg | undefined
+					] as Array<MapCateg | undefined>,
+					mapper_id: 0,
+					mapper_name: ``,
+					mapper_categs: [
+					{
+							id: 0,
+							name: ``
+						} as MapCateg | undefined
+					] as Array<MapCateg | undefined>,
+					count: 0
+				} as JkmlCategoryMap | undefined
+			] as Array<JkmlCategoryMap | undefined>
+		}
+	},
+	PostJakmallCategoryMapperSave: {
+		url: "jakmall/category_mapper/save" as const,
+		method: "POST" as const,
+		query: undefined,
+		body: [
+			{
+				type: ``,
+				name: ``,
+				categs: [
+				{
+						id: 0,
+						name: ``
+					} as MapCateg | undefined
+				] as Array<MapCateg | undefined>,
+				mapper_id: 0,
+				mapper_name: ``,
+				mapper_categs: [
+				{
+						id: 0,
+						name: ``
+					} as MapCateg | undefined
+				] as Array<MapCateg | undefined>
+			}
+		] as Array<CategoryMapper>,
+		response: {
+			msg: ``,
+			error: ``
+		}
+	},
+	PutJakmallCategoryMapperAutosuggest: {
+		url: "jakmall/category_mapper/autosuggest" as const,
+		method: "PUT" as const,
+		query: {
+			type: ``,
+			namespace: ``
+		},
+		body: {},
+		response: {
+			msg: ``,
+			error: ``
+		}
+	},
 	GetUploadV6ManualToShopee: {
 		url: "upload/v6/manual_to_shopee" as const,
 		method: "GET" as const,
@@ -3869,10 +4500,49 @@ export const clients = {
 		url: "upload/v6/tokopedia_to_shopee" as const,
 		method: "GET" as const,
 		query: {
-				base: ``
-			} as ShopeeUploadQueryCli ,
+				base: ``,
+				use_mapper: false
+			} as TopedShopeeUploadQueryCli ,
 		body: {},
 		response: {} as any
+	},
+	GetUploadV6QlobotToShopee: {
+		url: "upload/v6/qlobot_to_shopee" as const,
+		method: "GET" as const,
+		query: {
+			base: ``
+		},
+		body: {},
+		response: {
+			msg: ``,
+			error: ``
+		}
+	},
+	GetUploadV6JakmallToShopee: {
+		url: "upload/v6/jakmall_to_shopee" as const,
+		method: "GET" as const,
+		query: {
+			base: ``,
+			use_mapper: false
+		},
+		body: {},
+		response: {
+			msg: ``,
+			error: ``
+		}
+	},
+	GetUploadV6JakmallToTokopedia: {
+		url: "upload/v6/jakmall_to_tokopedia" as const,
+		method: "GET" as const,
+		query: {
+			base: ``,
+			use_mapper: false
+		},
+		body: {},
+		response: {
+			msg: ``,
+			error: ``
+		}
 	},
 	GetTokopediaUploadShopee: {
 		url: "tokopedia/upload/shopee" as const,
@@ -3919,6 +4589,72 @@ export const clients = {
 		query: {
 			namespace: ``
 		},
+		body: {},
+		response: {
+			errcode: 0,
+			message: ``,
+			status: ``
+		}
+	},
+	GetV1AkunTempAkun: {
+		url: "v1/akun/temp_akun" as const,
+		method: "GET" as const,
+		query: undefined,
+		body: {},
+		response: {
+			data: ``,
+			message: ``,
+			error: 0
+		}
+	},
+	GetV1MainInfo: {
+		url: "v1/main/info" as const,
+		method: "GET" as const,
+		query: undefined,
+		body: {},
+		response: {
+			lisensi: ``,
+			version: ``
+		}
+	},
+	GetV1MainCacheSize: {
+		url: "v1/main/cache_size" as const,
+		method: "GET" as const,
+		query: {
+			reset: false
+		},
+		body: {},
+		response: {
+			processing: false,
+			cache_size: {
+				size: 0.00,
+				size_kb: 0.00,
+				size_mb: 0.00,
+				size_gb: 0.00
+			} as SizeSum | undefined,
+			webdriver_size: {
+				size: 0.00,
+				size_kb: 0.00,
+				size_mb: 0.00,
+				size_gb: 0.00
+			} as SizeSum | undefined
+		}
+	},
+	DeleteV1MainClearCache: {
+		url: "v1/main/clear_cache" as const,
+		method: "DELETE" as const,
+		query: undefined,
+		body: {},
+		response: {
+			errcode: 0,
+			message: ``,
+			status: ``
+		}
+	},
+	DeleteV1MainClearCacheWebdriver: {
+		url: "v1/main/clear_cache_webdriver" as const,
+		method: "DELETE" as const,
+		query: undefined,
 		body: {},
 		response: {
 			errcode: 0,

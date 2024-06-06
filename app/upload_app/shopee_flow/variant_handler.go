@@ -61,7 +61,7 @@ func (flow *ShopeeToTopedFlow) createVariantHandler(spin shopeeuploader.SpinFunc
 			selections = append(selections, selection)
 		}
 
-		products := []model.ProductVariant{}
+		products := []*model.ProductVariant{}
 		for ind, smodel := range source.Models {
 
 			price := int(smodel.GetPrice(flow.ConfigFlow.MarkupConfig.UseDiscount) / 100000)
@@ -83,7 +83,7 @@ func (flow *ShopeeToTopedFlow) createVariantHandler(spin shopeeuploader.SpinFunc
 				product.Stock = flow.ConfigFlow.VariantHandlerConfig.StockSpin.GenerateSpin(len(source.Models))
 			}
 
-			products = append(products, product)
+			products = append(products, &product)
 		}
 
 		payload.Lock()

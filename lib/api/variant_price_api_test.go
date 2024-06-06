@@ -25,12 +25,11 @@ func TestVariantPriceApi(t *testing.T) {
 		err = json.Unmarshal(sourcebytes, &variant)
 		assert.Nil(t, err)
 
-		hasil, err := api.VariantPricevValidation(catId, &variant)
+		hasil, err := api.VariantPriceValidation(catId, &variant)
 		assert.NotEmpty(t, hasil)
 		assert.Nil(t, err)
 
-		messages := hasil.Data.ProductValidateV3.Data.Variants.Messages
-		assert.Equalf(t, 1, len(messages), "%+v", messages)
+		assert.Zero(t, hasil.GetPriceGab())
 	})
 
 	t.Run("test variant price validation invalid", func(t *testing.T) {
@@ -41,12 +40,10 @@ func TestVariantPriceApi(t *testing.T) {
 		err = json.Unmarshal(sourcebytes, &variant)
 		assert.Nil(t, err)
 
-		hasil, err := api.VariantPricevValidation(catId, &variant)
+		hasil, err := api.VariantPriceValidation(catId, &variant)
 		assert.NotEmpty(t, hasil)
 		assert.Nil(t, err)
 
-		messages := hasil.Data.ProductValidateV3.Data.Variants.Messages
-		assert.Equalf(t, 1, len(messages), "%+v", messages)
-		assert.Contains(t, messages[0], "maks. 3 kali lipat.")
+		assert.Equal(t, hasil.GetPriceGab(), 3)
 	})
 }
