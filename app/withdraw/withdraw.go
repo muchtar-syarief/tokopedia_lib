@@ -157,8 +157,6 @@ func (w *Withdraw) Run(dCtx *tokopedia_lib.DriverContext, pin string, report *Wi
 		return err
 	}
 
-	report.Jumlah = balance.Data.MidasGetAllDepositAmount.SellerAllFmt
-
 	if balance.Data.MidasGetAllDepositAmount.SellerAll == 0 {
 		return ErrSaldoKosong
 	}
@@ -178,10 +176,11 @@ func (w *Withdraw) Run(dCtx *tokopedia_lib.DriverContext, pin string, report *Wi
 		return err
 	}
 
-	err = w.StartWithdraw(user.Data.User.Phone, pinhashed, generateKey.Data.GenerateKey.H, strconv.Itoa(balance.Data.MidasGetAllDepositAmount.SellerAll))
+	err = w.StartWithdraw(user.Data.User.Phone, pinhashed, generateKey.Data.GenerateKey.H, strconv.Itoa(balance.Data.MidasGetAllDepositAmount.SellerUsable))
 	if err != nil {
 		return err
 	}
+	report.Jumlah = balance.Data.MidasGetAllDepositAmount.SellerAllFmt
 
 	return nil
 }

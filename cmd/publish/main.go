@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/pdcgo/tokopedia_lib/app/withdraw/wd_publisher"
 	"github.com/pdcgo/tokopedia_lib/lib/app_builder"
 	"github.com/urfave/cli/v2"
 )
@@ -45,6 +46,18 @@ func main() {
 					app_builder.BuildBynaryCmd("./dist", "./cmd/tokopedia", "tokopedia.exe")
 					return nil
 				},
+			},
+			{
+				Name:    "Auto Withdraw",
+				Aliases: []string{"wd"},
+				Flags: []cli.Flag{
+					&cli.StringFlag{
+						Name:  "m",
+						Value: "release",
+						Usage: "mode 'release' atau 'build'",
+					},
+				},
+				Action: wd_publisher.PublishTokpedWithdraw,
 			},
 		},
 	}

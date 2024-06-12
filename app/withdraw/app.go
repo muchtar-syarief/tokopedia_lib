@@ -2,7 +2,9 @@ package withdraw
 
 import (
 	"errors"
+	"os"
 
+	"github.com/gocarina/gocsv"
 	"github.com/pdcgo/common_conf/pdc_common"
 	"github.com/pdcgo/tokopedia_lib"
 )
@@ -21,6 +23,36 @@ type WithdrawReport struct {
 	Invoice    string `csv:"invoice"`
 	Jumlah     string `csv:"jumlah"`
 	SisaSaldo  string `csv:"sisa_saldo"`
+}
+
+func (r *WithdrawReport) Save(dst string) error {
+	file, err := os.OpenFile(dst, os.O_RDWR|os.O_CREATE, 0644)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	datas := []*WithdrawReport{}
+	err = gocsv.UnmarshalFile(file, &datas)
+	if err != nil {
+		if !errors.Is(err, gocsv.ErrEmptyCSVFile) {
+			return err
+		}
+	}
+
+	file, err = os.OpenFile(dst, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	datas = append(datas, r)
+	err = gocsv.MarshalFile(&datas, file)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func RunWithdraw(payload []*tokopedia_lib.DriverAccount) (chan *WithdrawReport, error) {
@@ -66,6 +98,8 @@ func RunWithdraw(payload []*tokopedia_lib.DriverAccount) (chan *WithdrawReport, 
 			})
 			if err != nil {
 				pdc_common.ReportError(err)
+				reports <- item
+				continue
 			}
 
 			items = append(items, item)
