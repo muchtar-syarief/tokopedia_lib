@@ -295,6 +295,16 @@ type NewVariantOptionData struct {
 	Typename      string           `json:"__typename"`
 }
 
+func (v *NewVariantOptionData) IsSize() bool {
+	for _, vari := range v.Variants {
+		if vari.VariantID == "29" {
+			return true
+		}
+	}
+
+	return false
+}
+
 func (v *NewVariantOptionData) GetFixChildrens() (results NewVariantChilds) {
 	for _, child := range v.Children {
 		if results.Match(child) {
@@ -618,6 +628,7 @@ func (layout *PdpGetLayout) GetPriceBeforeDiscount() (int, error) {
 }
 
 func (layout *PdpGetLayout) GetImages() ([]string, error) {
+	variantComponent, _ := GetComponent[NewVariantOptionsComponent](layout)
 	mediaComponent, err := GetComponent[MediaComponent](layout)
 	if err != nil {
 		return []string{}, err
@@ -625,12 +636,35 @@ func (layout *PdpGetLayout) GetImages() ([]string, error) {
 
 	images := []string{}
 	for _, media := range mediaComponent.Data[0].Media {
-		if media.Type == MediaImage {
-			images = append(images, media.URLOriginal)
+		if media.Type != MediaImage || media.VariantOptionID != "0" {
+			continue
 		}
+		if variantComponent != nil && len(variantComponent.Data) > 0 {
+			if variantComponent.Data[0].IsSize() {
+				if variantComponent.Data[0].SizeChart == media.URLOriginal {
+					continue
+				}
+			}
+		}
+		images = append(images, media.URLOriginal)
 	}
 
 	return images, nil
+}
+
+func (layout *PdpGetLayout) GetVariantImage(id string) (string, error) {
+	mediaComponent, err := GetComponent[MediaComponent](layout)
+	if err != nil {
+		return "", err
+	}
+
+	for _, media := range mediaComponent.Data[0].Media {
+		if media.VariantOptionID == id {
+			return media.URLOriginal, nil
+		}
+	}
+
+	return "", nil
 }
 
 func (layout *PdpGetLayout) GetDescription() (string, error) {
