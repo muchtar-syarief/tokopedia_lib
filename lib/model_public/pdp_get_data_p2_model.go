@@ -297,7 +297,9 @@ type NewVariantOptionData struct {
 
 func (v *NewVariantOptionData) IsSize() bool {
 	for _, vari := range v.Variants {
-		if vari.VariantID == "29" {
+		isUkuran := strings.Contains(strings.ToLower(vari.Name), "ukuran")
+		isSize := strings.Contains(strings.ToLower(vari.Name), "size")
+		if vari.VariantID != "" || isUkuran || isSize {
 			return true
 		}
 	}
