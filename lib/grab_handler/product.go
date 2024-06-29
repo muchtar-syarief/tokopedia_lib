@@ -97,10 +97,6 @@ func CreateCacheProduct(
 	}
 
 	sold := pdpLayout.BasicInfo.TxStats.CountSold
-	if err != nil {
-		return mongorepo.CacheProduct{}, err
-	}
-
 	desc, err := pdpLayout.GetDescription()
 	if err != nil {
 		return mongorepo.CacheProduct{}, err

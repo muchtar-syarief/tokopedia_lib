@@ -7,6 +7,7 @@ require (
 	github.com/go-playground/validator/v10 v10.15.4
 	github.com/gocarina/gocsv v0.0.0-20230513223533-9ddd7fd60602
 	github.com/google/uuid v1.4.0
+	github.com/google/wire v0.5.0
 	github.com/pdcgo/common_conf v1.1.12
 	github.com/pdcgo/go-mitmproxy v1.0.5
 	github.com/pdcgo/go_v2_shopeelib v1.1.52
@@ -44,7 +45,6 @@ require (
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/flatbuffers v23.5.26+incompatible // indirect
 	github.com/google/s2a-go v0.1.7 // indirect
-	github.com/google/wire v0.5.0 // indirect
 	github.com/hashicorp/go-version v1.6.0 // indirect
 	github.com/iancoleman/strcase v0.3.0 // indirect
 	github.com/jezek/xgb v1.0.0 // indirect
