@@ -11,7 +11,7 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-var AppVersion = "1.2.0"
+var AppVersion = "1.3.0"
 var storage = "tokopedia_uploader_artifact"
 var variant = "auto_withdraw"
 var AppEntryPoint = "./bin/auto_withdraw.exe"

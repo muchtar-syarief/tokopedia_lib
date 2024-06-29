@@ -82,7 +82,7 @@ func RunWithdraw(payload []*tokopedia_lib.DriverAccount) (chan *WithdrawReport, 
 				ShopName:   tApi.AuthenticatedData.UserShopInfo.Info.ShopName,
 				Jumlah:     "Rp0",
 				SisaSaldo:  "Rp0",
-				Keterangan: "Withdrawal",
+				Keterangan: "Withdraw",
 			}
 
 			withdraw := NewWithdraw(tApi)
