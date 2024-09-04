@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"strings"
 
 	"github.com/pdcgo/tokopedia_lib"
@@ -28,16 +29,22 @@ func RunWithdraw(akunpathfile, reportpathfile string) error {
 		drivers = append(drivers, driver)
 	}
 
-	results, err := withdraw.RunWithdraw(drivers)
-	if err != nil {
-		return err
-	}
+	for _, driver := range drivers {
+		log.Printf("[ LOG ]: Start withdraw account %s", driver.Username)
 
-	for result := range results {
-		err := result.Save(reportpathfile)
+		results, err := withdraw.RunWithdraw(driver)
 		if err != nil {
 			return err
 		}
+
+		for result := range results {
+			err := result.Save(reportpathfile)
+			if err != nil {
+				return err
+			}
+		}
+
+		log.Printf("[ LOG ]: Withdraw account %s finished", driver.Username)
 	}
 
 	return nil

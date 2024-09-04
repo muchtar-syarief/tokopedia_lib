@@ -55,7 +55,7 @@ func (r *WithdrawReport) Save(dst string) error {
 	return nil
 }
 
-func RunWithdraw(payload []*tokopedia_lib.DriverAccount) (chan *WithdrawReport, error) {
+func RunWithdraw(payload ...*tokopedia_lib.DriverAccount) (chan *WithdrawReport, error) {
 	reports := make(chan *WithdrawReport)
 
 	go func() {
@@ -70,12 +70,6 @@ func RunWithdraw(payload []*tokopedia_lib.DriverAccount) (chan *WithdrawReport, 
 			defer func() {
 				driver.Session.SaveSession()
 			}()
-
-			items, err := GetUnwithdrawTransaction(tApi)
-			if err != nil {
-				pdc_common.ReportError(err)
-				continue
-			}
 
 			item := &WithdrawReport{
 				Email:      driver.Username,
@@ -99,6 +93,12 @@ func RunWithdraw(payload []*tokopedia_lib.DriverAccount) (chan *WithdrawReport, 
 			if err != nil {
 				pdc_common.ReportError(err)
 				reports <- item
+				continue
+			}
+
+			items, err := GetUnwithdrawTransaction(tApi)
+			if err != nil {
+				pdc_common.ReportError(err)
 				continue
 			}
 

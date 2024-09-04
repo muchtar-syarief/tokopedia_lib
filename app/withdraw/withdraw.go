@@ -16,6 +16,7 @@ import (
 )
 
 var ErrSaldoKosong = errors.New("saldo kosong")
+var ErrBankAccount = errors.New("you don't have bank account")
 var ErrHashedPin = errors.New("error hashing pin")
 
 type Withdraw struct {
@@ -52,6 +53,9 @@ func (w *Withdraw) StartWithdraw(phone, pinHashed, h, amount string) error {
 	}
 
 	bank := banks.Data.GetBankListWDV2.Data.GetDefaultBank()
+	if bank == nil {
+		return ErrBankAccount
+	}
 
 	otpValidateVariable := api.NewOtpValidateVariable(phone, strconv.Itoa(bank.BankAccountID), pinHashed, h)
 	otpValidate, err := w.Api.WithdrawOtpValidate(otpValidateVariable)
